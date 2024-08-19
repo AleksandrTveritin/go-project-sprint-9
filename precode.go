@@ -30,10 +30,9 @@ func Generator(ctx context.Context, ch chan<- int64, fn func(int64)) {
 func Worker(in <-chan int64, out chan<- int64) {
 	// 2. Функция Worker
 	defer close(out)
-	tiker := time.NewTicker(1 * time.Millisecond)
 	for v := range in {
 		out <- v
-		<-tiker.C
+		time.Sleep(1 * time.Millisecond)
 	}
 }
 
@@ -41,7 +40,7 @@ func main() {
 	chIn := make(chan int64)
 
 	// 3. Создание контекста
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	// для проверки будем считать количество и сумму отправленных чисел
